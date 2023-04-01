@@ -13,5 +13,7 @@ namespace Hb.AuthServer.Core.Services
     {
         Task<Response<UserAppDto>> CreateUserAsync(CreateUserDto dto);
         Task<Response<UserAppDto>> GetUserByNameAsync(string userName);
+
+        Task<Response<NoDataDto>> CreateUserRole(string userName);
      }
 }

@@ -17,10 +17,12 @@ namespace Hb.AuthServer.Service.Services
     {
 
         private readonly UserManager<UserApp> userManager;
+        private readonly RoleManager<IdentityRole> roleManager;
 
-        public UserService(UserManager<UserApp> userManager)
+        public UserService(UserManager<UserApp> userManager, RoleManager<IdentityRole> roleManager)
         {
             this.userManager = userManager;
+            this.roleManager = roleManager;
         }
 
         public async Task<Response<UserAppDto>> CreateUserAsync(CreateUserDto dto)
@@ -37,6 +39,23 @@ namespace Hb.AuthServer.Service.Services
             }
 
             return Response<UserAppDto>.Succes(ObjectMapper.Mapper.Map<UserAppDto>(user),200);
+        }
+
+        public async Task<Response<NoDataDto>> CreateUserRole(string userName)
+        {
+
+            if ( !await roleManager.RoleExistsAsync("admin"))
+            {
+                await roleManager.CreateAsync(new() { Name = "admin" });
+                await roleManager.CreateAsync(new() { Name = "manager" });
+            }
+
+            var user = await userManager.FindByNameAsync(userName);
+
+            await userManager.AddToRoleAsync(user, "admin");
+            await userManager.AddToRoleAsync(user, "manager");
+
+            return Response<NoDataDto>.Succes(200);
         }
 
         public async Task<Response<UserAppDto>> GetUserByNameAsync(string userName)

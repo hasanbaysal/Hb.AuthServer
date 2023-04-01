@@ -31,5 +31,11 @@ namespace Hb.AuthServer.API.Controllers
         {
             return ActionResultInstance(await userService.GetUserByNameAsync(HttpContext.User.Identity!.Name!));
         }
+
+        [HttpPost("CreateUserRole/{userName}")]
+        public async Task<IActionResult> CreateUserRole(string userName)
+        {
+          return ActionResultInstance(await userService.CreateUserRole(userName));
+        }
     }
 }

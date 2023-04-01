@@ -33,8 +33,10 @@ namespace Hb.AuthServer.Service.Services
         }
 
 
-        private IEnumerable<Claim> GetClaims(UserApp userApp, List<string> audiences)
+        private  IEnumerable<Claim> GetClaims(UserApp userApp, List<string> audiences)
         {
+
+            var userRoles =  userManager.GetRolesAsync(userApp).Result;
          
             var userList = new List<Claim>()
             {
@@ -47,6 +49,8 @@ namespace Hb.AuthServer.Service.Services
             };
 
             userList.AddRange(audiences.Select(x => new Claim(JwtRegisteredClaimNames.Aud, x)));
+            userList.AddRange(userRoles.Select(x => new Claim(ClaimTypes.Role, x)));
+
 
             return userList;
 

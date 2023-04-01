@@ -12,6 +12,7 @@ namespace Hb.MiniApp1.API.Controllers
     {
 
         [HttpGet]
+        [Authorize( Roles ="admin")]
         public IActionResult GetUserİnfo()
         {
             var userName = HttpContext.User.Identity!.Name;
